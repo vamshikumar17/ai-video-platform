@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>AI Video Platform</title>
+    <title>AI Video Studio</title>
 
     <style>
         * {
@@ -15,41 +15,52 @@
 
         body {
             font-family: Arial, sans-serif;
-            background: #0b0f19;
-            color: white;
+            background: #080b12;
+            color: #ffffff;
             min-height: 100vh;
         }
 
         header {
+            height: 70px;
+            padding: 0 6%;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 20px 7%;
-            border-bottom: 1px solid #222938;
+            justify-content: space-between;
+            border-bottom: 1px solid #202532;
         }
 
         .logo {
-            font-size: 24px;
-            font-weight: bold;
+            font-size: 23px;
+            font-weight: 700;
         }
 
-        .badge {
-            background: #20283a;
+        .logo span {
+            color: #8b5cf6;
+        }
+
+        .credits {
             padding: 8px 14px;
+            border: 1px solid #303747;
             border-radius: 20px;
+            color: #c8cedc;
             font-size: 13px;
         }
 
         main {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: auto;
-            padding: 80px 20px;
+            padding: 65px 20px;
+        }
+
+        .hero {
             text-align: center;
+            margin-bottom: 45px;
         }
 
         .hero h1 {
-            font-size: 48px;
-            margin-bottom: 20px;
+            font-size: 46px;
+            line-height: 1.15;
+            margin-bottom: 15px;
         }
 
         .hero h1 span {
@@ -57,74 +68,126 @@
         }
 
         .hero p {
-            color: #aab2c5;
-            font-size: 18px;
-            margin-bottom: 45px;
+            color: #929bad;
+            font-size: 17px;
         }
 
-        .creator {
-            background: #121827;
-            border: 1px solid #293247;
+        .studio {
+            background: #111621;
+            border: 1px solid #252c3a;
             border-radius: 20px;
-            padding: 30px;
-            max-width: 700px;
-            margin: auto;
+            padding: 25px;
+        }
+
+        .label {
+            display: block;
+            color: #d9deea;
+            font-size: 14px;
+            margin-bottom: 10px;
         }
 
         textarea {
             width: 100%;
-            height: 140px;
-            resize: none;
-            background: #0b0f19;
-            border: 1px solid #30394d;
-            border-radius: 12px;
+            min-height: 160px;
+            padding: 17px;
+            background: #080b12;
             color: white;
-            padding: 16px;
-            font-size: 16px;
+            border: 1px solid #303849;
+            border-radius: 12px;
+            resize: vertical;
             outline: none;
+            font-size: 16px;
         }
 
-        .buttons {
-            display: flex;
+        textarea:focus {
+            border-color: #8b5cf6;
+        }
+
+        .tools {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 12px;
             margin-top: 20px;
-            flex-wrap: wrap;
         }
 
-        button {
-            flex: 1;
-            min-width: 180px;
+        .tool {
+            background: #191f2c;
+            border: 1px solid #303747;
+            color: #dce1eb;
             padding: 15px;
-            border: none;
             border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .tool:hover {
+            border-color: #8b5cf6;
+        }
+
+        .generate {
+            width: 100%;
+            margin-top: 20px;
+            padding: 17px;
+            border: none;
+            border-radius: 11px;
             background: #8b5cf6;
             color: white;
-            font-size: 15px;
-            font-weight: bold;
+            font-size: 16px;
+            font-weight: 700;
             cursor: pointer;
         }
 
-        button.secondary {
-            background: #20283a;
+        .generate:hover {
+            opacity: 0.9;
         }
 
-        button:hover {
-            opacity: 0.9;
+        .features {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 35px;
+        }
+
+        .feature {
+            background: #111621;
+            border: 1px solid #252c3a;
+            border-radius: 14px;
+            padding: 20px;
+        }
+
+        .feature h3 {
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        .feature p {
+            color: #858e9f;
+            font-size: 13px;
+            line-height: 1.5;
         }
 
         footer {
             text-align: center;
-            color: #667085;
+            color: #596273;
             padding: 30px;
+            font-size: 13px;
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 700px) {
             .hero h1 {
                 font-size: 36px;
             }
 
-            main {
-                padding-top: 50px;
+            .tools,
+            .features {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 450px) {
+            .tools,
+            .features {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -132,47 +195,101 @@
 
 <body>
 
-    <header>
-        <div class="logo">AI Video</div>
-        <div class="badge">Phase 1 Prototype</div>
-    </header>
+<header>
+    <div class="logo">AI <span>Video</span></div>
+    <div class="credits">Free Credits: 10</div>
+</header>
 
-    <main>
+<main>
 
-        <section class="hero">
-            <h1>Create videos with <span>AI</span></h1>
+    <section class="hero">
+        <h1>Create videos with <span>AI</span></h1>
+        <p>Turn your ideas into videos with simple AI tools.</p>
+    </section>
 
-            <p>
-                Turn your ideas into videos using text, images and AI.
-            </p>
-        </section>
+    <section class="studio">
 
-        <section class="creator">
+        <label class="label">Describe your video</label>
 
-            <textarea
-                placeholder="Describe the video you want to create..."
-            ></textarea>
+        <textarea
+            id="prompt"
+            placeholder="Example: A cute cartoon elephant walking through a colorful forest..."
+        ></textarea>
 
-            <div class="buttons">
-                <button onclick="alert('Text to Video coming soon!')">
-                    Text → Video
-                </button>
+        <div class="tools">
 
-                <button
-                    class="secondary"
-                    onclick="alert('Image to Video coming soon!')"
-                >
-                    Image → Video
-                </button>
-            </div>
+            <button class="tool" onclick="alert('Image upload will be added next.')">
+                🖼️ Add Image
+            </button>
 
-        </section>
+            <button class="tool" onclick="alert('Video style options coming soon.')">
+                🎨 Video Style
+            </button>
 
-    </main>
+            <button class="tool" onclick="alert('Voice options coming soon.')">
+                🎙️ AI Voice
+            </button>
 
-    <footer>
-        AI Video Platform © 2026
-    </footer>
+        </div>
+
+        <button class="generate" onclick="generateVideo()">
+            ✨ Generate Video
+        </button>
+
+    </section>
+
+    <section class="features">
+
+        <div class="feature">
+            <h3>🎬 Text to Video</h3>
+            <p>Turn a written idea into a video.</p>
+        </div>
+
+        <div class="feature">
+            <h3>🖼️ Image to Video</h3>
+            <p>Animate your images with AI.</p>
+        </div>
+
+        <div class="feature">
+            <h3>🎙️ AI Voice</h3>
+            <p>Create narration for your videos.</p>
+        </div>
+
+        <div class="feature">
+            <h3>🎵 AI Audio</h3>
+            <p>Add music and sound effects.</p>
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+    AI Video Studio © 2026
+</footer>
+
+<script>
+
+    function generateVideo() {
+
+        const prompt = document
+            .getElementById("prompt")
+            .value
+            .trim();
+
+        if (prompt === "") {
+
+            alert("Please describe the video you want to create.");
+
+            return;
+        }
+
+        alert(
+            "Your video request has been received! AI generation will be connected in the next phase."
+        );
+    }
+
+</script>
 
 </body>
 </html>
