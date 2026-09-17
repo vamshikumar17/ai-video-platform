@@ -218,9 +218,17 @@
 
         <div class="tools">
 
-            <button class="tool" onclick="alert('Image upload will be added next.')">
-                🖼️ Add Image
-            </button>
+            <button class="tool" onclick="addImage()">
+    🖼️ Add Image
+</button>
+
+<input
+    type="file"
+    id="imageInput"
+    accept="image/*"
+    style="display: none;"
+    onchange="handleImage(event)"
+>
 
             <button class="tool" onclick="alert('Video style options coming soon.')">
                 🎨 Video Style
@@ -322,7 +330,19 @@
 
     }, 2000);
 }
+function addImage() {
+    document.getElementById("imageInput").click();
+}
 
+function handleImage(event) {
+    const file = event.target.files[0];
+
+    if (!file) {
+        return;
+    }
+
+    alert("Image selected: " + file.name);
+}
 </script>
 
 </body>
