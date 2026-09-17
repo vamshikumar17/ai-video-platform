@@ -3,17 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>AI Video Platform</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #0b0f19;
+            color: white;
+            min-height: 100vh;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 7%;
+            border-bottom: 1px solid #222938;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .badge {
+            background: #20283a;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: auto;
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 span {
+            color: #8b5cf6;
+        }
+
+        .hero p {
+            color: #aab2c5;
+            font-size: 18px;
+            margin-bottom: 45px;
+        }
+
+        .creator {
+            background: #121827;
+            border: 1px solid #293247;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 700px;
+            margin: auto;
+        }
+
+        textarea {
+            width: 100%;
+            height: 140px;
+            resize: none;
+            background: #0b0f19;
+            border: 1px solid #30394d;
+            border-radius: 12px;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            flex: 1;
+            min-width: 180px;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #8b5cf6;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button.secondary {
+            background: #20283a;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        footer {
+            text-align: center;
+            color: #667085;
+            padding: 30px;
+        }
+
+        @media (max-width: 600px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            main {
+                padding-top: 50px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-    <h1>AI Video Platform</h1>
+    <header>
+        <div class="logo">AI Video</div>
+        <div class="badge">Phase 1 Prototype</div>
+    </header>
 
-    <p>Create amazing videos with AI.</p>
+    <main>
 
-    <button>Text to Video</button>
-    <button>Image to Video</button>
+        <section class="hero">
+            <h1>Create videos with <span>AI</span></h1>
+
+            <p>
+                Turn your ideas into videos using text, images and AI.
+            </p>
+        </section>
+
+        <section class="creator">
+
+            <textarea
+                placeholder="Describe the video you want to create..."
+            ></textarea>
+
+            <div class="buttons">
+                <button onclick="alert('Text to Video coming soon!')">
+                    Text → Video
+                </button>
+
+                <button
+                    class="secondary"
+                    onclick="alert('Image to Video coming soon!')"
+                >
+                    Image → Video
+                </button>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        AI Video Platform © 2026
+    </footer>
 
 </body>
 </html>
