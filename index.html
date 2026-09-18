@@ -256,7 +256,13 @@
     <option value="female">👩 Female Voice</option>
     <option value="child">🧒 Child Voice</option>
 </select>
-
+<select id="videoDuration" class="tool">
+    <option value="">⏱️ Choose Duration</option>
+    <option value="5">5 Seconds</option>
+    <option value="10">10 Seconds</option>
+    <option value="15">15 Seconds</option>
+    <option value="30">30 Seconds</option>
+</select>
         </div>
 
 <button class="generate" onclick="generateVideo()">
@@ -326,7 +332,8 @@
         .trim();
 
     const style = document.getElementById("videoStyle").value;
-    const voice = document.getElementById("voiceStyle").value;
+const voice = document.getElementById("voiceStyle").value;
+const duration = document.getElementById("videoDuration").value;
 const imageInput = document.getElementById("imageInput");
 const hasImage = imageInput.files.length > 0;
     const status = document.getElementById("generationStatus");
@@ -345,8 +352,9 @@ const hasImage = imageInput.files.length > 0;
     statusTitle.textContent = "Preparing your video...";
     statusText.textContent =
     "Style: " + (style || "Default") +
-    " | Voice: " + (voice || "Default") +
-    " | Image: " + (hasImage ? "Added" : "Not added") +
+" | Voice: " + (voice || "Default") +
+" | Duration: " + (duration || "Default") +
+" | Image: " + (hasImage ? "Added" : "Not added") +
     ". Your AI video request is being prepared.";
 
     setTimeout(function() {
@@ -355,6 +363,7 @@ const hasImage = imageInput.files.length > 0;
         statusText.textContent =
     "Style: " + (style || "Default") +
     " | Voice: " + (voice || "Default") +
+    " | Duration: " + (duration || "Default") +
     " | Image: " + (hasImage ? "Added" : "Not added") +
     ". Your video will appear here when generation is connected.";
 
