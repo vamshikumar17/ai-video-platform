@@ -327,6 +327,8 @@
 
     const style = document.getElementById("videoStyle").value;
     const voice = document.getElementById("voiceStyle").value;
+const imageInput = document.getElementById("imageInput");
+const hasImage = imageInput.files.length > 0;
     const status = document.getElementById("generationStatus");
     const statusTitle = document.getElementById("statusTitle");
     const statusText = document.getElementById("statusText");
@@ -344,6 +346,7 @@
     statusText.textContent =
     "Style: " + (style || "Default") +
     " | Voice: " + (voice || "Default") +
+    " | Image: " + (hasImage ? "Added" : "Not added") +
     ". Your AI video request is being prepared.";
 
     setTimeout(function() {
@@ -352,6 +355,7 @@
         statusText.textContent =
     "Style: " + (style || "Default") +
     " | Voice: " + (voice || "Default") +
+    " | Image: " + (hasImage ? "Added" : "Not added") +
     ". Your video will appear here when generation is connected.";
 
     }, 2000);
