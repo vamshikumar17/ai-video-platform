@@ -257,6 +257,15 @@
     <option value="adventure">⚡ Adventure Music</option>
     <option value="calm">🌿 Calm Music</option>
 </select>
+        <select id="soundStyle" class="tool">
+    <option value="">🔊 Choose Sound Effects</option>
+    <option value="none">🚫 No Sound Effects</option>
+    <option value="nature">🌿 Nature Sounds</option>
+    <option value="city">🏙️ City Sounds</option>
+    <option value="action">💥 Action Sounds</option>
+    <option value="magic">✨ Magic Sounds</option>
+    <option value="funny">😂 Funny Sounds</option>
+            </select>
         <select id="voiceStyle" class="tool">
     <option value="">🎙️ Choose AI Voice</option>
     <option value="male">👨 Male Voice</option>
@@ -341,6 +350,7 @@
     const style = document.getElementById("videoStyle").value;
 const voice = document.getElementById("voiceStyle").value;
         const music = document.getElementById("musicStyle").value;
+        const sound = document.getElementById("soundStyle").value;
 const duration = document.getElementById("videoDuration").value;
 const imageInput = document.getElementById("imageInput");
 const hasImage = imageInput.files.length > 0;
@@ -361,7 +371,7 @@ const hasImage = imageInput.files.length > 0;
     statusText.textContent =
     "Style: " + (style || "Default") +
 " | Voice: " + (voice || "Default") +
-" | Music: " + (music || "Default") +
+" | Music: " + (music || "Default") +   " | Sound Effects: " + (sound || "Default") +
 " | Duration: " + (duration || "Default") +
 " | Image: " + (hasImage ? "Added" : "Not added") +
     ". Your AI video request is being prepared.";
@@ -373,6 +383,7 @@ const hasImage = imageInput.files.length > 0;
     "Style: " + (style || "Default") +
     " | Voice: " + (voice || "Default") +
 " | Music: " + (music || "Default") +
+" | Sound Effects: " + (sound || "Default") +
 " | Duration: " + (duration || "Default") +
     " | Image: " + (hasImage ? "Added" : "Not added") +
     ". Your video will appear here when generation is connected.";
