@@ -1,2 +1,2 @@
 # ai-video-platform
-Ai video generator platform - phase 1 prototype 
+Ai video generator platform - phase 3 AI integration
