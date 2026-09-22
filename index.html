@@ -376,19 +376,7 @@ const hasImage = imageInput.files.length > 0;
 " | Image: " + (hasImage ? "Added" : "Not added") +
     ". Your AI video request is being prepared.";
 
-    setTimeout(function() {
-
-        statusTitle.textContent = "AI generation started ✨";
-        statusText.textContent =
-    "Style: " + (style || "Default") +
-    " | Voice: " + (voice || "Default") +
-" | Music: " + (music || "Default") +
-" | Sound Effects: " + (sound || "Default") +
-" | Duration: " + (duration || "Default") +
-    " | Image: " + (hasImage ? "Added" : "Not added") +
-    ". Your video will appear here when generation is connected.";
-
-    }, 2000);
+    
 }
 function addImage() {
     document.getElementById("imageInput").click();
