@@ -376,7 +376,36 @@ const hasImage = imageInput.files.length > 0;
 " | Image: " + (hasImage ? "Added" : "Not added") +
     ". Your AI video request is being prepared.";
 
-    
+    fetch("https://old-mountain-daf9.vamshikumar685.workers.dev/generate", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            prompt: prompt,
+            style: style,
+            voice: voice,
+            music: music,
+            sound: sound,
+            duration: duration,
+            hasImage: hasImage
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.ok) {
+            statusTitle.textContent = "Request received!";
+            statusText.textContent = data.message;
+        } else {
+            statusTitle.textContent = "Generation error";
+            statusText.textContent = data.error || "Something went wrong.";
+        }
+    })
+    .catch(error => {
+        statusTitle.textContent = "Connection error";
+        statusText.textContent = "Could not connect to the AI video backend.";
+        console.error(error);
+    });
 }
 function addImage() {
     document.getElementById("imageInput").click();
