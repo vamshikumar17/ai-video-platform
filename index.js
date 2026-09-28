@@ -30,7 +30,24 @@ export default {
         }
       );
     }
-
+// Video model availability test
+if (url.pathname === "/video-model-test" && request.method === "GET") {
+  return new Response(
+    JSON.stringify({
+      ok: true,
+      model: "pruna/p-video",
+      ready: true,
+      generation: false,
+      message: "Video model route is configured. No video was generated."
+    }),
+    {
+      headers: {
+        "Content-Type": "application/json",
+        ...corsHeaders
+      }
+    }
+  );
+}
     // AI Video generation request
     if (url.pathname === "/generate" && request.method === "POST") {
       try {
