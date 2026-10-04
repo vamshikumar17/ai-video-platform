@@ -3,7 +3,8 @@ export default {
     const corsHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, X-Video-Test-Secret"
+      "Access-Control-Allow-Headers":
+        "Content-Type, X-Video-Test-Secret"
     };
 
     // CORS preflight
@@ -15,8 +16,14 @@ export default {
 
     const url = new URL(request.url);
 
-    // Health check
-    if (url.pathname === "/health" && request.method === "GET") {
+    // =========================================================
+    // HEALTH CHECK
+    // =========================================================
+
+    if (
+      url.pathname === "/health" &&
+      request.method === "GET"
+    ) {
       return new Response(
         JSON.stringify({
           ok: true,
@@ -32,8 +39,11 @@ export default {
       );
     }
 
-    // Safe video model availability route
-    // This does NOT generate a video.
+    // =========================================================
+    // SAFE VIDEO MODEL TEST
+    // Does NOT generate a video.
+    // =========================================================
+
     if (
       url.pathname === "/video-model-test" &&
       request.method === "GET"
@@ -44,7 +54,8 @@ export default {
           model: "pruna/p-video",
           ready: true,
           generation: false,
-          message: "Video model route is configured. No video was generated."
+          message:
+            "Video model route is configured. No video was generated."
         }),
         {
           headers: {
@@ -55,14 +66,16 @@ export default {
       );
     }
 
-    // Real video generation route
-    // Protected by BOTH a Cloudflare secret and an explicit test flag.
+    // =========================================================
+    // CLOUDFLARE P-VIDEO TEST ROUTE
+    // Protected by VIDEO_TEST_SECRET.
+    // =========================================================
+
     if (
       url.pathname === "/generate-video" &&
       request.method === "POST"
     ) {
       try {
-        // Check Cloudflare secret
         const providedSecret =
           request.headers.get("X-Video-Test-Secret");
 
@@ -73,7 +86,8 @@ export default {
           return new Response(
             JSON.stringify({
               ok: false,
-              error: "Unauthorized video generation request."
+              error:
+                "Unauthorized video generation request."
             }),
             {
               status: 401,
@@ -87,7 +101,6 @@ export default {
 
         const body = await request.json();
 
-        // Require explicit test flag
         if (body.testGeneration !== true) {
           return new Response(
             JSON.stringify({
@@ -105,7 +118,8 @@ export default {
           );
         }
 
-        const prompt = String(body.prompt || "").trim();
+        const prompt =
+          String(body.prompt || "").trim();
 
         if (!prompt) {
           return new Response(
@@ -123,7 +137,6 @@ export default {
           );
         }
 
-        // Real P-Video generation
         const video = await env.AI.run(
           "pruna/p-video",
           {
@@ -167,7 +180,11 @@ export default {
       }
     }
 
-    // AI production-plan generation
+    // =========================================================
+    // AI PRODUCTION PLAN
+    // This uses Workers AI and does NOT call Magic Hour.
+    // =========================================================
+
     if (
       url.pathname === "/generate" &&
       request.method === "POST"
@@ -175,13 +192,26 @@ export default {
       try {
         const body = await request.json();
 
-        const prompt = String(body.prompt || "").trim();
-        const style = String(body.style || "default");
-        const voice = String(body.voice || "default");
-        const music = String(body.music || "default");
-        const sound = String(body.sound || "default");
-        const duration = String(body.duration || "default");
-        const hasImage = Boolean(body.hasImage);
+        const prompt =
+          String(body.prompt || "").trim();
+
+        const style =
+          String(body.style || "default");
+
+        const voice =
+          String(body.voice || "default");
+
+        const music =
+          String(body.music || "default");
+
+        const sound =
+          String(body.sound || "default");
+
+        const duration =
+          String(body.duration || "default");
+
+        const hasImage =
+          Boolean(body.hasImage);
 
         if (!prompt) {
           return new Response(
@@ -297,7 +327,286 @@ Keep the answer practical for a future video-generation engine.
       }
     }
 
-    // Default response
+    // =========================================================
+    // MAGIC HOUR TEXT-TO-VIDEO
+    //
+    // Protected by VIDEO_TEST_SECRET.
+    // The public website cannot call this without the secret.
+    //
+    // IMPORTANT:
+    // This submits ONE Magic Hour generation job and returns
+    // the project ID.
+    // =========================================================
+
+    if (
+      url.pathname === "/magic-hour-generate" &&
+      request.method === "POST"
+    ) {
+      try {
+        const providedSecret =
+          request.headers.get("X-Video-Test-Secret");
+
+        if (
+          !env.VIDEO_TEST_SECRET ||
+          providedSecret !== env.VIDEO_TEST_SECRET
+        ) {
+          return new Response(
+            JSON.stringify({
+              ok: false,
+              error:
+                "Unauthorized Magic Hour request."
+            }),
+            {
+              status: 401,
+              headers: {
+                "Content-Type": "application/json",
+                ...corsHeaders
+              }
+            }
+          );
+        }
+
+        if (!env.MAGIC_HOUR_API_KEY) {
+          return new Response(
+            JSON.stringify({
+              ok: false,
+              error:
+                "Magic Hour API key is not configured."
+            }),
+            {
+              status: 500,
+              headers: {
+                "Content-Type": "application/json",
+                ...corsHeaders
+              }
+            }
+          );
+        }
+
+        const body = await request.json();
+
+        const prompt =
+          String(body.prompt || "").trim();
+
+        if (!prompt) {
+          return new Response(
+            JSON.stringify({
+              ok: false,
+              error: "Prompt is required."
+            }),
+            {
+              status: 400,
+              headers: {
+                "Content-Type": "application/json",
+                ...corsHeaders
+              }
+            }
+          );
+        }
+
+        const magicHourResponse = await fetch(
+          "https://api.magichour.ai/v1/text-to-video",
+          {
+            method: "POST",
+            headers: {
+              "Authorization":
+                `Bearer ${env.MAGIC_HOUR_API_KEY}`,
+              "Content-Type": "application/json",
+              "Accept": "application/json"
+            },
+            body: JSON.stringify({
+              name: "AI Video Studio test",
+              end_seconds: 5,
+              aspect_ratio: "16:9",
+              resolution: "720p",
+              model: "kling-3.0",
+              audio: true,
+              style: {
+                prompt
+              }
+            })
+          }
+        );
+
+        const result =
+          await magicHourResponse.json();
+
+        if (!magicHourResponse.ok) {
+          return new Response(
+            JSON.stringify({
+              ok: false,
+              error:
+                "Magic Hour video request failed.",
+              magicHour: result
+            }),
+            {
+              status: magicHourResponse.status,
+              headers: {
+                "Content-Type": "application/json",
+                ...corsHeaders
+              }
+            }
+          );
+        }
+
+        return new Response(
+          JSON.stringify({
+            ok: true,
+            status: "submitted",
+            projectId: result.id,
+            magicHour: result
+          }),
+          {
+            headers: {
+              "Content-Type": "application/json",
+              ...corsHeaders
+            }
+          }
+        );
+
+      } catch (error) {
+        return new Response(
+          JSON.stringify({
+            ok: false,
+            error:
+              "Magic Hour request failed.",
+            details: error.message
+          }),
+          {
+            status: 500,
+            headers: {
+              "Content-Type": "application/json",
+              ...corsHeaders
+            }
+          }
+        );
+      }
+    }
+
+    // =========================================================
+    // MAGIC HOUR PROJECT STATUS
+    //
+    // This checks an existing project.
+    // It does NOT create another video.
+    // =========================================================
+
+    if (
+      url.pathname === "/magic-hour-status" &&
+      request.method === "GET"
+    ) {
+      try {
+        const providedSecret =
+          request.headers.get("X-Video-Test-Secret");
+
+        if (
+          !env.VIDEO_TEST_SECRET ||
+          providedSecret !== env.VIDEO_TEST_SECRET
+        ) {
+          return new Response(
+            JSON.stringify({
+              ok: false,
+              error:
+                "Unauthorized Magic Hour status request."
+            }),
+            {
+              status: 401,
+              headers: {
+                "Content-Type": "application/json",
+                ...corsHeaders
+              }
+            }
+          );
+        }
+
+        if (!env.MAGIC_HOUR_API_KEY) {
+          return new Response(
+            JSON.stringify({
+              ok: false,
+              error:
+                "Magic Hour API key is not configured."
+            }),
+            {
+              status: 500,
+              headers: {
+                "Content-Type": "application/json",
+                ...corsHeaders
+              }
+            }
+          );
+        }
+
+        const projectId =
+          url.searchParams.get("projectId");
+
+        if (!projectId) {
+          return new Response(
+            JSON.stringify({
+              ok: false,
+              error:
+                "projectId is required."
+            }),
+            {
+              status: 400,
+              headers: {
+                "Content-Type": "application/json",
+                ...corsHeaders
+              }
+            }
+          );
+        }
+
+        const statusResponse = await fetch(
+          `https://api.magichour.ai/v1/video-projects/${encodeURIComponent(projectId)}`,
+          {
+            method: "GET",
+            headers: {
+              "Authorization":
+                `Bearer ${env.MAGIC_HOUR_API_KEY}`,
+              "Accept": "application/json"
+            }
+          }
+        );
+
+        const result =
+          await statusResponse.json();
+
+        return new Response(
+          JSON.stringify({
+            ok: statusResponse.ok,
+            project: result
+          }),
+          {
+            status: statusResponse.status,
+            headers: {
+              "Content-Type": "application/json",
+              ...corsHeaders
+            }
+          }
+        );
+
+      } catch (error) {
+        return new Response(
+          JSON.stringify({
+            ok: false,
+            error:
+              "Magic Hour status request failed.",
+            details: error.message
+          }),
+          {
+            status: 500,
+            headers: {
+              "Content-Type": "application/json",
+              ...corsHeaders
+            }
+          }
+        );
+      }
+    }
+
+    // =========================================================
+    // DEFAULT RESPONSE
+    // =========================================================
+
     return new Response(
       "AI Video Platform backend is online.",
       {
