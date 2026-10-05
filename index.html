@@ -309,6 +309,20 @@
     ">
         Your request is being prepared.
     </p>
+        <pre id="aiPlan" style="
+        display: none;
+        margin-top: 15px;
+        padding: 15px;
+        background: #080b12;
+        border: 1px solid #303747;
+        border-radius: 10px;
+        color: #dce1eb;
+        font-size: 13px;
+        line-height: 1.6;
+        text-align: left;
+        white-space: pre-wrap;
+        overflow-x: auto;
+    "></pre>
 </div>
 
     </section>
@@ -405,8 +419,12 @@ turnstileToken: turnstileResponse
     .then(response => response.json())
     .then(data => {
         if (data.ok) {
-            statusTitle.textContent = "Request received!";
-            statusText.textContent = data.message;
+    statusTitle.textContent = "AI Production Plan Ready ✨";
+    statusText.textContent = "Your AI director has prepared the video plan.";
+
+    const aiPlan = document.getElementById("aiPlan");
+    aiPlan.textContent = data.message;
+    aiPlan.style.display = "block";
         } else {
             statusTitle.textContent = "Generation error";
             statusText.textContent = data.error || "Something went wrong.";
