@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>AI Video Studio</title>
@@ -280,7 +281,11 @@
     <option value="30">30 Seconds</option>
 </select>
         </div>
-
+<div
+    class="cf-turnstile"
+    data-sitekey="0x4AAAAAAFNUpfqy5h1Ovor6"
+    style="margin: 15px 0;"
+></div>
 <button class="generate" onclick="generateVideo()">
     ✨ Generate Video
 </button>
@@ -364,7 +369,12 @@ const hasImage = imageInput.files.length > 0;
 
         return;
     }
+const turnstileResponse = turnstile.getResponse();
 
+if (!turnstileResponse) {
+    alert("Please complete the security check.");
+    return;
+}
     status.style.display = "block";
 
     statusTitle.textContent = "Preparing your video...";
@@ -388,7 +398,8 @@ const hasImage = imageInput.files.length > 0;
             music: music,
             sound: sound,
             duration: duration,
-            hasImage: hasImage
+            hasImage: hasImage,
+turnstileToken: turnstileResponse
         })
     })
     .then(response => response.json())
