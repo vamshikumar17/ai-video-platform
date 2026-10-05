@@ -323,6 +323,14 @@
         white-space: pre-wrap;
         overflow-x: auto;
     "></pre>
+    <button
+    id="createVideoButton"
+    class="generate"
+    style="display: none; margin-top: 15px;"
+    onclick="createActualVideo()"
+>
+    🎬 Create Actual Video
+    </button>
 </div>
 
     </section>
@@ -425,6 +433,7 @@ turnstileToken: turnstileResponse
     const aiPlan = document.getElementById("aiPlan");
     aiPlan.textContent = data.message;
     aiPlan.style.display = "block";
+            document.getElementById("createVideoButton").style.display = "block";
         } else {
             statusTitle.textContent = "Generation error";
             statusText.textContent = data.error || "Something went wrong.";
@@ -452,7 +461,20 @@ function handleImage(event) {
     preview.src = URL.createObjectURL(file);
     preview.style.display = "block";
 }
-</script>
 
+function createActualVideo() {
+    const confirmed = confirm(
+        "Creating the actual video will use video-generation credits. Do you want to continue?"
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    alert(
+        "Video generation is ready to be connected. No video was generated yet."
+    );
+}
+    </script>
 </body>
 </html>
