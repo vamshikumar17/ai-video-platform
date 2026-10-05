@@ -192,6 +192,58 @@ export default {
       try {
         const body = await request.json();
 
+        const turnstileToken =
+          String(body.turnstileToken || "").trim();
+
+        if (!turnstileToken) {
+          return new Response(
+            JSON.stringify({
+              ok: false,
+              error: "Security verification is required."
+            }),
+            {
+              status: 403,
+              headers: {
+                "Content-Type": "application/json",
+                ...corsHeaders
+              }
+            }
+          );
+        }
+
+        const turnstileResponse = await fetch(
+          "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type":
+                "application/x-www-form-urlencoded"
+            },
+            body: new URLSearchParams({
+              secret: env.TURNSTILE_SECRET_KEY,
+              response: turnstileToken
+            })
+          }
+        );
+
+        const turnstileResult =
+          await turnstileResponse.json();
+
+        if (!turnstileResult.success) {
+          return new Response(
+            JSON.stringify({
+              ok: false,
+              error: "Security verification failed."
+            }),
+            {
+              status: 403,
+              headers: {
+                "Content-Type": "application/json",
+                ...corsHeaders
+              }
+            }
+          );
+        }
         const prompt =
           String(body.prompt || "").trim();
 
