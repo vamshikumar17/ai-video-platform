@@ -380,6 +380,134 @@ Keep the answer practical for a future video-generation engine.
     }
 
     // =========================================================
+    // SAFE VIDEO CREATION CHECK — NO GENERATION
+    // =========================================================
+    if (
+      url.pathname === "/create-video-check" &&
+      request.method === "POST"
+    ) {
+      try {
+        if (!env.TURNSTILE_SECRET_KEY) {
+          return new Response(
+            JSON.stringify({
+              ok: false,
+              error: "Security verification is not configured."
+            }),
+            {
+              status: 500,
+              headers: {
+                "Content-Type": "application/json",
+                ...corsHeaders
+              }
+            }
+          );
+        }
+
+        const body = await request.json();
+        const prompt = String(body.prompt || "").trim();
+        const token = String(body.turnstileToken || "").trim();
+
+        if (!token) {
+          return new Response(
+            JSON.stringify({
+              ok: false,
+              error: "Security verification is required."
+            }),
+            {
+              status: 403,
+              headers: {
+                "Content-Type": "application/json",
+                ...corsHeaders
+              }
+            }
+          );
+        }
+
+        if (!prompt || prompt.length > 1500) {
+          return new Response(
+            JSON.stringify({
+              ok: false,
+              error: "Prompt must contain 1–1500 characters."
+            }),
+            {
+              status: 400,
+              headers: {
+                "Content-Type": "application/json",
+                ...corsHeaders
+              }
+            }
+          );
+        }
+
+        const verifyResponse = await fetch(
+          "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type":
+                "application/x-www-form-urlencoded"
+            },
+            body: new URLSearchParams({
+              secret: env.TURNSTILE_SECRET_KEY,
+              response: token
+            })
+          }
+        );
+
+        const verification = await verifyResponse.json();
+
+        if (
+          !verification.success ||
+          verification.hostname !== "vamshikumar17.github.io"
+        ) {
+          return new Response(
+            JSON.stringify({
+              ok: false,
+              error: "Security verification failed."
+            }),
+            {
+              status: 403,
+              headers: {
+                "Content-Type": "application/json",
+                ...corsHeaders
+              }
+            }
+          );
+        }
+
+        return new Response(
+          JSON.stringify({
+            ok: true,
+            status: "validated",
+            generation: false,
+            message:
+              "Request validated. No video was generated and no Magic Hour credits were used."
+          }),
+          {
+            headers: {
+              "Content-Type": "application/json",
+              ...corsHeaders
+            }
+          }
+        );
+      } catch (error) {
+        return new Response(
+          JSON.stringify({
+            ok: false,
+            error: "Request validation failed."
+          }),
+          {
+            status: 400,
+            headers: {
+              "Content-Type": "application/json",
+              ...corsHeaders
+            }
+          }
+        );
+      }
+    }
+    
+    // =========================================================
     // MAGIC HOUR TEXT-TO-VIDEO
     //
     // Protected by VIDEO_TEST_SECRET.
