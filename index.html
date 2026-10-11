@@ -462,18 +462,66 @@ function handleImage(event) {
     preview.style.display = "block";
 }
 
-function createActualVideo() {
+async function createActualVideo() {
     const confirmed = confirm(
-        "Creating the actual video will use video-generation credits. Do you want to continue?"
+        "This is a validation-only test. No video will be generated and no Magic Hour credits will be used. Continue?"
     );
 
     if (!confirmed) {
         return;
     }
 
-    alert(
-        "Video generation is ready to be connected. No video was generated yet."
-    );
+    const prompt = document.getElementById("prompt")?.value.trim();
+
+    if (!prompt) {
+        alert("Please enter a video prompt first.");
+        return;
+    }
+
+    if (typeof turnstile === "undefined") {
+        alert("Security verification is not available. Please refresh the page and try again.");
+        return;
+    }
+
+    const turnstileToken = turnstile.getResponse();
+
+    if (!turnstileToken) {
+        alert("Please complete the security verification again.");
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            "https://old-mountain-daf9.vamshikumar685.workers.dev/create-video-check",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    prompt: prompt,
+                    turnstileToken: turnstileToken
+                })
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || !result.ok) {
+            alert(result.error || "Validation failed. Please try again.");
+            return;
+        }
+
+        alert(
+            "Validation successful! No video was generated and no Magic Hour credits were used."
+        );
+    } catch (error) {
+        alert("Could not reach the validation service. Please try again.");
+    } finally {
+        if (typeof turnstile !== "undefined") {
+            turnstile.reset();
+        }
+    }
 }
     </script>
 </body>
