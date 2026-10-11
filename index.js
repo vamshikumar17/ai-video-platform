@@ -455,7 +455,11 @@ Keep the answer practical for a future video-generation engine.
         );
 
         const verification = await verifyResponse.json();
-
+console.log("Turnstile verification result:", {
+    success: verification.success,
+    hostname: verification.hostname,
+    errorCodes: verification["error-codes"]
+});
         if (
           !verification.success ||
           verification.hostname !== "vamshikumar17.github.io"
