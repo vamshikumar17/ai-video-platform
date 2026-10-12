@@ -460,10 +460,22 @@ console.log("Turnstile verification result:", {
     hostname: verification.hostname,
     errorCodes: verification["error-codes"]
 });
-        if (
-          !verification.success ||
-          verification.hostname !== "vamshikumar17.github.io"
-        ) {
+        return new Response(
+  JSON.stringify({
+    ok: false,
+    error: "Security verification failed.",
+    diagnostic: !verification.success
+      ? "TURNSTILE_REJECTED"
+      : "HOSTNAME_MISMATCH"
+  }),
+  {
+    status: 403,
+    headers: {
+      "Content-Type": "application/json",
+      ...corsHeaders
+    }
+  }
+);
           return new Response(
             JSON.stringify({
               ok: false,
