@@ -378,7 +378,7 @@ Keep the answer practical for a future video-generation engine.
         );
       }
     }
-
+    
     // =========================================================
     // SAFE VIDEO CREATION CHECK — NO GENERATION
     // =========================================================
@@ -411,7 +411,7 @@ Keep the answer practical for a future video-generation engine.
           return new Response(
             JSON.stringify({
               ok: false,
-              error: "Security verification is required."
+              error: "Security verification is required. Please complete the check again."
             }),
             {
               status: 403,
@@ -444,8 +444,7 @@ Keep the answer practical for a future video-generation engine.
           {
             method: "POST",
             headers: {
-              "Content-Type":
-                "application/x-www-form-urlencoded"
+              "Content-Type": "application/x-www-form-urlencoded"
             },
             body: new URLSearchParams({
               secret: env.TURNSTILE_SECRET_KEY,
@@ -455,31 +454,15 @@ Keep the answer practical for a future video-generation engine.
         );
 
         const verification = await verifyResponse.json();
-console.log("Turnstile verification result:", {
-    success: verification.success,
-    hostname: verification.hostname,
-    errorCodes: verification["error-codes"]
-});
-        return new Response(
-  JSON.stringify({
-    ok: false,
-    error: "Security verification failed.",
-    diagnostic: !verification.success
-      ? "TURNSTILE_REJECTED"
-      : "HOSTNAME_MISMATCH"
-  }),
-  {
-    status: 403,
-    headers: {
-      "Content-Type": "application/json",
-      ...corsHeaders
-    }
-  }
-);
+
+        if (
+          !verification.success ||
+          verification.hostname !== "vamshikumar17.github.io"
+        ) {
           return new Response(
             JSON.stringify({
               ok: false,
-              error: "Security verification failed."
+              error: "Security verification failed. Please complete the check again."
             }),
             {
               status: 403,
@@ -496,8 +479,7 @@ console.log("Turnstile verification result:", {
             ok: true,
             status: "validated",
             generation: false,
-            message:
-              "Request validated. No video was generated and no Magic Hour credits were used."
+            message: "Request validated. No video was generated and no Magic Hour credits were used."
           }),
           {
             headers: {
@@ -507,6 +489,8 @@ console.log("Turnstile verification result:", {
           }
         );
       } catch (error) {
+        console.error("Create-video validation failed:", error);
+
         return new Response(
           JSON.stringify({
             ok: false,
@@ -523,7 +507,7 @@ console.log("Turnstile verification result:", {
       }
     }
     
-    // =========================================================
+     // =========================================================
     // MAGIC HOUR TEXT-TO-VIDEO
     //
     // Protected by VIDEO_TEST_SECRET.
