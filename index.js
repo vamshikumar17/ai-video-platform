@@ -563,6 +563,23 @@ Keep the answer practical for a future video-generation engine.
           );
         }
 
+        // SAFETY LOCK: Magic Hour generation is disabled by default.
+        if (env.MAGIC_HOUR_GENERATION_ENABLED !== "true") {
+          return new Response(
+            JSON.stringify({
+              ok: false,
+              error: "Video generation is currently disabled."
+            }),
+            {
+              status: 403,
+              headers: {
+                "Content-Type": "application/json",
+                ...corsHeaders
+              }
+            }
+          );
+        }
+        
         const body = await request.json();
 
         const prompt =
