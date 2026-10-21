@@ -329,7 +329,7 @@
     style="display: none; margin-top: 15px;"
     onclick="createActualVideo()"
 >
-    🎬 Create Actual Video
+    🔒 Actual Video Generation Disabled
     </button>
 </div>
 
@@ -464,7 +464,7 @@ function handleImage(event) {
 
 async function createActualVideo() {
     const confirmed = confirm(
-        "This is a validation-only test. No video will be generated and no Magic Hour credits will be used. Continue?"
+        "This is a security and request validation test only. No video will be generated, and no Magic Hour credits will be used. Continue?"
     );
 
     if (!confirmed) {
