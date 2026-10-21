@@ -100,7 +100,22 @@ export default {
         }
 
         const body = await request.json();
-
+// SAFETY LOCK: Cloudflare video generation is disabled by default.
+if (env.CLOUDFLARE_VIDEO_GENERATION_ENABLED !== "true") {
+  return new Response(
+    JSON.stringify({
+      ok: false,
+      error: "Video generation is currently disabled."
+    }),
+    {
+      status: 403,
+      headers: {
+        "Content-Type": "application/json",
+        ...corsHeaders
+      }
+    }
+  );
+}
         if (body.testGeneration !== true) {
           return new Response(
             JSON.stringify({
