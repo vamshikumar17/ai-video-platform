@@ -338,14 +338,22 @@
         overflow-x: auto;
     "></pre>
     <button
+    id="validateVideoButton"
+    class="generate"
+    style="display: none; margin-top: 15px;"
+    onclick="createActualVideo()"
+>
+    🛡️ Validate Request (No Video Generated)
+</button>
+
+<button
     id="createVideoButton"
     class="generate"
-disabled
-style="display: none; margin-top: 15px; opacity: 0.5; cursor: not-allowed;"
-onclick="createActualVideo()"
+    disabled
+    style="display: none; margin-top: 10px; opacity: 0.5; cursor: not-allowed;"
 >
     🔒 Actual Video Generation Disabled
-    </button>
+</button>
 </div>
 
     </section>
@@ -449,6 +457,7 @@ turnstileToken: turnstileResponse
     aiPlan.textContent = data.message;
     aiPlan.style.display = "block";
             document.getElementById("createVideoButton").style.display = "block";
+            document.getElementById("validateVideoButton").style.display = "block";
         } else {
             statusTitle.textContent = "Generation error";
             statusText.textContent = data.error || "Something went wrong.";
