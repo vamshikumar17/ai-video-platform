@@ -414,14 +414,14 @@ if (!turnstileResponse) {
 }
     status.style.display = "block";
 
-    statusTitle.textContent = "Preparing your video...";
+    statusTitle.textContent = "Preparing your AI production plan...";
     statusText.textContent =
     "Style: " + (style || "Default") +
 " | Voice: " + (voice || "Default") +
 " | Music: " + (music || "Default") +   " | Sound Effects: " + (sound || "Default") +
 " | Duration: " + (duration || "Default") +
 " | Image: " + (hasImage ? "Added" : "Not added") +
-    ". Your AI video request is being prepared.";
+    ". Your AI production plan is being prepared.";
 
     fetch("https://old-mountain-daf9.vamshikumar685.workers.dev/generate", {
         method: "POST",
