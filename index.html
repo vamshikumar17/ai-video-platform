@@ -464,10 +464,11 @@ statusText.textContent = data.error || "We couldn't prepare your AI production p
         }
     })
     .catch(error => {
-        statusTitle.textContent = "Connection error";
-        statusText.textContent = "Could not connect to the AI video backend.";
-        console.error(error);
-    });
+    statusTitle.textContent = "Connection Error";
+    statusText.textContent =
+        "We couldn't connect to the AI service. Please check your internet connection and try again.";
+    console.error("AI plan request failed:", error);
+});
 }
 function addImage() {
     document.getElementById("imageInput").click();
