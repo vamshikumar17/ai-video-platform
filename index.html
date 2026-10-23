@@ -459,8 +459,8 @@ turnstileToken: turnstileResponse
             
             document.getElementById("validateVideoButton").style.display = "block";
         } else {
-            statusTitle.textContent = "Generation error";
-            statusText.textContent = data.error || "Something went wrong.";
+            statusTitle.textContent = "AI Plan Error";
+statusText.textContent = data.error || "We couldn't prepare your AI production plan. Please try again.";
         }
     })
     .catch(error => {
