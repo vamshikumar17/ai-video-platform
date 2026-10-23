@@ -421,7 +421,9 @@ if (!turnstileResponse) {
     return;
 }
     status.style.display = "block";
-
+document.getElementById("aiPlan").style.display = "none";
+document.getElementById("validateVideoButton").style.display = "none";
+document.getElementById("createVideoButton").style.display = "none";
     statusTitle.textContent = "Preparing your AI production plan...";
     statusText.textContent =
     "Style: " + (style || "Default") +
