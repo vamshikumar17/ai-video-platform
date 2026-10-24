@@ -470,24 +470,44 @@ Keep the answer practical for a future video-generation engine.
 
         const verification = await verifyResponse.json();
 
-        if (
-          !verification.success ||
-          verification.hostname !== "vamshikumar17.github.io"
-        ) {
-          return new Response(
-            JSON.stringify({
-              ok: false,
-              error: "Security verification failed. Please complete the check again."
-            }),
-            {
-              status: 403,
-              headers: {
-                "Content-Type": "application/json",
-                ...corsHeaders
-              }
-            }
-          );
-        }
+        if (!verification.success) {
+  console.error("Turnstile verification failed:", {
+    errorCodes: verification["error-codes"] || []
+  });
+
+  return new Response(
+    JSON.stringify({
+      ok: false,
+      error: "Security verification failed.",
+      errorCodes: verification["error-codes"] || []
+    }),
+    {
+      status: 403,
+      headers: {
+        "Content-Type": "application/json",
+        ...corsHeaders
+      }
+    }
+  );
+}
+
+if (verification.hostname !== "vamshikumar17.github.io") {
+  console.error("Unexpected Turnstile hostname:", verification.hostname);
+
+  return new Response(
+    JSON.stringify({
+      ok: false,
+      error: "Security hostname did not match."
+    }),
+    {
+      status: 403,
+      headers: {
+        "Content-Type": "application/json",
+        ...corsHeaders
+      }
+    }
+  );
+}
 
         return new Response(
           JSON.stringify({
