@@ -284,6 +284,8 @@
 <div
     class="cf-turnstile"
     data-sitekey="0x4AAAAAAFNUpfqy5h1Ovor6"
+    data-callback="onTurnstileSuccess"
+    data-expired-callback="onTurnstileExpired"
     style="margin: 15px 0;"
 ></div>
 <button class="generate" onclick="generateVideo()">
@@ -341,7 +343,7 @@
     id="validateVideoButton"
     class="generate"
     style="display: none; margin-top: 15px;"
-    onclick="createActualVideo()"
+    onclick="refreshTurnstileForValidation()"
 >
     🛡️ Validate Request (No Video Generated)
 </button>
@@ -488,7 +490,37 @@ function handleImage(event) {
     preview.src = URL.createObjectURL(file);
     preview.style.display = "block";
 }
+let turnstileTokenValue = "";
+let validationWaitingForToken = false;
+function onTurnstileSuccess(token) {
+    turnstileTokenValue = token;
 
+    if (validationWaitingForToken) {
+        validationWaitingForToken = false;
+        createActualVideo();
+    }
+}
+
+function onTurnstileExpired() {
+    turnstileTokenValue = "";
+    }
+    function refreshTurnstileForValidation() {
+    if (typeof turnstile === "undefined") {
+        alert("Security verification is unavailable. Please refresh the page.");
+        return;
+    }
+
+    turnstileTokenValue = "";
+    validationWaitingForToken = true;
+    turnstile.reset();
+
+    alert("Complete the security check. Validation will continue automatically.");
+    }
+
+    turnstileTokenValue = "";
+    turnstile.reset();
+    alert("Please complete the security check again, then tap Validate Request.");
+    }
 async function createActualVideo() {
     const confirmed = confirm(
         "This is a security and request validation test only. No video will be generated, and no Magic Hour credits will be used. Continue?"
@@ -510,12 +542,12 @@ async function createActualVideo() {
         return;
     }
 
-    const turnstileToken = turnstile.getResponse();
+    const turnstileToken = turnstileTokenValue;
 
-    if (!turnstileToken) {
-        alert("Please complete the security verification again.");
-        return;
-    }
+if (!turnstileToken) {
+    alert("Please complete the security check again before validating.");
+    return;
+}
 
     try {
         const response = await fetch(
