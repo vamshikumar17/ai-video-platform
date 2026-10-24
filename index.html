@@ -535,8 +535,15 @@ async function createActualVideo() {
         const result = await response.json();
 
         if (!response.ok || !result.ok) {
-            alert(result.error || "Validation failed. Please try again.");
-            return;
+    const errorDetails = Array.isArray(result.errorCodes)
+        ? "\nError codes: " + result.errorCodes.join(", ")
+        : "";
+
+    alert(
+        (result.error || "Validation failed. Please try again.") +
+        errorDetails
+    );
+    return;
         }
 
         alert(
