@@ -477,6 +477,11 @@ statusText.textContent = data.error || "We couldn't prepare your AI production p
     statusText.textContent =
         "We couldn't connect to the AI service. Please check your internet connection and try again.";
     console.error("AI plan request failed:", error);
+})
+        .finally(() => {
+    if (typeof turnstile !== "undefined") {
+        turnstile.reset();
+    }
 });
 }
 function addImage() {
