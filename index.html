@@ -515,6 +515,21 @@ function onTurnstileExpired() {
         return;
     }
 
+    const confirmed = confirm(
+        "This is a security validation test only. No video will be generated and no credits will be used. Continue?"
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    turnstileTokenValue = "";
+    validationWaitingForToken = true;
+    turnstile.reset();
+
+    alert("Complete the security check. Validation will continue automatically.");
+    }
+
     turnstileTokenValue = "";
     validationWaitingForToken = true;
     turnstile.reset();
