@@ -416,6 +416,11 @@ const hasImage = imageInput.files.length > 0;
 
         return;
     }
+if (typeof turnstile === "undefined") {
+    alert("Security verification is still loading. Please wait a moment and try again.");
+    return;
+}
+
 const turnstileResponse = turnstile.getResponse();
 
 if (!turnstileResponse) {
@@ -472,6 +477,11 @@ statusText.textContent = data.error || "We couldn't prepare your AI production p
     statusText.textContent =
         "We couldn't connect to the AI service. Please check your internet connection and try again.";
     console.error("AI plan request failed:", error);
+})
+        .finally(() => {
+    if (typeof turnstile !== "undefined") {
+        turnstile.reset();
+    }
 });
 }
 function addImage() {
@@ -492,6 +502,7 @@ function handleImage(event) {
 }
 let turnstileTokenValue = "";
 let validationWaitingForToken = false;
+
 function onTurnstileSuccess(token) {
     turnstileTokenValue = token;
 
@@ -503,10 +514,19 @@ function onTurnstileSuccess(token) {
 
 function onTurnstileExpired() {
     turnstileTokenValue = "";
-    }
-    function refreshTurnstileForValidation() {
+}
+
+function refreshTurnstileForValidation() {
     if (typeof turnstile === "undefined") {
         alert("Security verification is unavailable. Please refresh the page.");
+        return;
+    }
+
+    const confirmed = confirm(
+        "This is a security validation test only. No video will be generated and no credits will be used. Continue?"
+    );
+
+    if (!confirmed) {
         return;
     }
 
@@ -515,20 +535,9 @@ function onTurnstileExpired() {
     turnstile.reset();
 
     alert("Complete the security check. Validation will continue automatically.");
-    }
+}
 
-    turnstileTokenValue = "";
-    turnstile.reset();
-    alert("Please complete the security check again, then tap Validate Request.");
-    }
 async function createActualVideo() {
-    const confirmed = confirm(
-        "This is a security and request validation test only. No video will be generated, and no Magic Hour credits will be used. Continue?"
-    );
-
-    if (!confirmed) {
-        return;
-    }
 
     const prompt = document.getElementById("prompt")?.value.trim();
 
