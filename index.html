@@ -497,6 +497,7 @@ function handleImage(event) {
 }
 let turnstileTokenValue = "";
 let validationWaitingForToken = false;
+
 function onTurnstileSuccess(token) {
     turnstileTokenValue = token;
 
@@ -508,8 +509,9 @@ function onTurnstileSuccess(token) {
 
 function onTurnstileExpired() {
     turnstileTokenValue = "";
-    }
-    function refreshTurnstileForValidation() {
+}
+
+function refreshTurnstileForValidation() {
     if (typeof turnstile === "undefined") {
         alert("Security verification is unavailable. Please refresh the page.");
         return;
@@ -528,23 +530,9 @@ function onTurnstileExpired() {
     turnstile.reset();
 
     alert("Complete the security check. Validation will continue automatically.");
-    }
-
-    turnstileTokenValue = "";
-    validationWaitingForToken = true;
-    turnstile.reset();
-
-    alert("Complete the security check. Validation will continue automatically.");
-    }
+}
 
 async function createActualVideo() {
-    const confirmed = confirm(
-        "This is a security and request validation test only. No video will be generated, and no Magic Hour credits will be used. Continue?"
-    );
-
-    if (!confirmed) {
-        return;
-    }
 
     const prompt = document.getElementById("prompt")?.value.trim();
 
