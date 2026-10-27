@@ -201,9 +201,9 @@ if (env.CLOUDFLARE_VIDEO_GENERATION_ENABLED !== "true") {
     // =========================================================
 
     if (
-      url.pathname === "/generate" &&
-      request.method === "POST"
-    ) {
+  url.pathname === "/generate" &&
+  request.method === "POST"
+) {
       try {
         const body = await request.json();
 
