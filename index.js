@@ -834,7 +834,74 @@ if (verification.hostname !== "vamshikumar17.github.io") {
         );
       }
     }
+    // =========================================================
+    // SIMULATED VIDEO JOB — NO VIDEO GENERATION
+    // =========================================================
 
+    if (
+      url.pathname === "/create-job" &&
+      request.method === "POST"
+    ) {
+      try {
+        const body = await request.json();
+        const prompt = String(body.prompt || "").trim();
+
+        if (!prompt || prompt.length > 1500) {
+          return new Response(
+            JSON.stringify({
+              ok: false,
+              error: "Prompt must contain 1–1500 characters."
+            }),
+            {
+              status: 400,
+              headers: {
+                "Content-Type": "application/json",
+                ...corsHeaders
+              }
+            }
+          );
+        }
+
+        // This is a simulated job only.
+        // It does not generate a video or call any paid API.
+        const jobId = crypto.randomUUID();
+
+        return new Response(
+          JSON.stringify({
+            ok: true,
+            job: {
+              id: jobId,
+              status: "queued",
+              prompt: prompt,
+              generation: false,
+              message:
+                "Simulated job created. No video was generated and no credits were used."
+            }
+          }),
+          {
+            status: 202,
+            headers: {
+              "Content-Type": "application/json",
+              ...corsHeaders
+            }
+          }
+        );
+      } catch (error) {
+        return new Response(
+          JSON.stringify({
+            ok: false,
+            error: "Invalid request body."
+          }),
+          {
+            status: 400,
+            headers: {
+              "Content-Type": "application/json",
+              ...corsHeaders
+            }
+          }
+        );
+      }
+    }
     // =========================================================
     // DEFAULT RESPONSE
     // =========================================================
